@@ -2,6 +2,7 @@ package com.example.jdbcmore;
 
 import com.example.jdbcmore.dao.UserJdbcDao;
 import com.example.jdbcmore.pojo.User;
+import com.example.jdbcmore.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ class JdbcmoreApplicationTests {
 
     @Autowired
     private UserJdbcDao userJdbcDao;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     @Qualifier("primaryJdbcTemplate")
@@ -48,5 +52,17 @@ class JdbcmoreApplicationTests {
         userJdbcDao.save1(secondaryJdbcTemplate,user);
 
 
+    }
+
+
+    @Test
+    void testJta() throws InterruptedException {
+        try {
+            userService.testJta();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Thread.sleep(3000);
     }
 }

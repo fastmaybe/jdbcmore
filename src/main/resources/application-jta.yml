@@ -1,0 +1,24 @@
+primarydb:
+  uniqueResourceName: primary
+  xaDataSourceClassName: com.mysql.cj.jdbc.MysqlXADataSource
+  xaProperties:
+    url: jdbc:mysql:///jdbcmore1?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=UTC
+    user: root
+    password: 123456
+  exclusiveConnectionMode: true
+  minPoolSize: 3
+  maxPoolSize: 10
+  testQuery: SELECT 1 from dual #由于采用HikiriCP，用于检测数据库连接是否存活。
+
+secondarydb:
+  uniqueResourceName: secondary
+  xaDataSourceClassName: com.mysql.cj.jdbc.MysqlXADataSource
+  xaProperties:
+    url: jdbc:mysql:///jdbcmore2?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=UTC
+    user: root
+    password: 123456
+  exclusiveConnectionMode: true
+  minPoolSize: 3
+  maxPoolSize: 10
+  testQuery: SELECT 1 from dual #由于采用HikiriCP，用于检测数据库连接是否存活。
+# 这个xa-datasource-class是专门为分布式事务准备的。
