@@ -1,12 +1,16 @@
 spring:
   datasource:
     one:
-      jdbc-url: jdbc:mysql:///jdbcmore1?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=UTC
+      #不同数据源厂商  名字有些许差别  使用DruidDataSource  得写url
+      url: jdbc:mysql:///jdbcmore1?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=UTC
       username: root
       password: 123456
       driver-class-name: com.mysql.cj.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
     another:
+      # 使用HikariDataSource  jdbc-url
       jdbc-url: jdbc:mysql:///jdbcmore2?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=UTC
       username: root
       password: 123456
       driver-class-name: com.mysql.cj.jdbc.Driver
+

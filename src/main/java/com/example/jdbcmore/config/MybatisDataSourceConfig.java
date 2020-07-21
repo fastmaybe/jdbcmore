@@ -1,5 +1,6 @@
 package com.example.jdbcmore.config;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -20,21 +21,22 @@ import javax.sql.DataSource;
  * 多数据源  已知多数据源
  */
 @Configuration
-@MapperScan(basePackages = "com.example.jdbcmore.mapper.db1", sqlSessionTemplateRef  = "oneSqlSessionTemplate")
+@MapperScan(basePackages = "com.example.jdbcmore.mapper.db1", sqlSessionTemplateRef = "oneSqlSessionTemplate")
 public class MybatisDataSourceConfig {
-
 
 
     @Bean("oneDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.one")
     @Primary
-    public DataSource customDataSource(){
-        return DataSourceBuilder.create().build();
+    public DataSource customDataSource() {
+        //使用    DruidDataSource
+        return new DruidDataSource();
     }
+
 
     @Bean(name = "oneSqlSessionFactory")
     @Primary
-    public SqlSessionFactory  customSqlSessionFactory(@Qualifier("oneDataSource") DataSource dataSource) throws Exception {
+    public SqlSessionFactory customSqlSessionFactory(@Qualifier("oneDataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         Resource[] resources = new PathMatchingResourcePatternResolver().getResources("classpath*:mapper/db1/*.xml");
@@ -44,7 +46,7 @@ public class MybatisDataSourceConfig {
 
     @Bean(name = "oneTransactionManager")
     @Primary
-    public DataSourceTransactionManager customTransactionManager(@Qualifier("oneDataSource") DataSource dataSource){
+    public DataSourceTransactionManager customTransactionManager(@Qualifier("oneDataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
