@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    one:
+      jdbc-url: jdbc:mysql:///jdbcmore1?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=UTC
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    another:
+      jdbc-url: jdbc:mysql:///jdbcmore2?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=UTC
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
