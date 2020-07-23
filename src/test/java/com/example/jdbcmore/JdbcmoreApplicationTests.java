@@ -1,68 +1,36 @@
 package com.example.jdbcmore;
 
-import com.example.jdbcmore.dao.UserJdbcDao;
+import com.example.jdbcmore.mapper.UserMapper;
 import com.example.jdbcmore.pojo.User;
-import com.example.jdbcmore.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
+
+//@RunWith(SpringJUnit4ClassRunner.class)
 @ExtendWith(SpringExtension.class)  //Junit5
 @SpringBootTest
 class JdbcmoreApplicationTests {
 
 
-    @Autowired
-    private UserJdbcDao userJdbcDao;
+    @Resource
+    private UserMapper userMapper;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    @Qualifier("primaryJdbcTemplate")
-    private JdbcTemplate primaryJdbcTemplate;
-
-    @Autowired
-    @Qualifier("secondaryJdbcTemplate")
-    private JdbcTemplate secondaryJdbcTemplate;
 
     @Test
     void contextLoads() {
+        // db1 写  db2 读
+        User slave = User.builder().id(3).name("master").build();
+        userMapper.insert(slave);
 
-
-    }
-
-    @Test
-    void save1Test1() {
-        User user = User.builder().id(1).name("11").build();
-
-
-        userJdbcDao.save1(primaryJdbcTemplate,user);
-
-    }
-    @Test
-    void save1Test2() {
-        User user = User.builder().id(1).name("11").build();
-
-
-        userJdbcDao.save1(secondaryJdbcTemplate,user);
-
-
+        User user = userMapper.selectByPrimaryKey(2);
+        System.out.println(user.getName());
     }
 
 
-    @Test
-    void testJta() throws InterruptedException {
-        try {
-            userService.testJta();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        Thread.sleep(3000);
-    }
 }

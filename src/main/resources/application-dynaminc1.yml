@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    default:
+      url: jdbc:mysql:///jdbcmore1?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=UTC
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
+    slave:
+      jdbc-url: jdbc:mysql:///jdbcmore2?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=UTC
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
