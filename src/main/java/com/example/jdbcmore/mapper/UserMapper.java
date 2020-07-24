@@ -13,6 +13,9 @@ public interface UserMapper {
     int deleteByPrimaryKey(Integer id);
 
     @DataSource()
+    int insertMaster(User record);
+
+    @DataSource("slave")
     int insert(User record);
 
     int insertSelective(User record);

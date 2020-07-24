@@ -41,6 +41,10 @@
             </if>
         </trim>
     </insert>
+    <insert id="insertMaster" parameterType="com.example.jdbcmore.pojo.User">
+         insert into user (id, name)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR})
+    </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.example.jdbcmore.pojo.User">
         update user
         <set>

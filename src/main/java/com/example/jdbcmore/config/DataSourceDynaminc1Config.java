@@ -14,7 +14,9 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -122,5 +124,11 @@ public class DataSourceDynaminc1Config {
     @Bean
     public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory){
         return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(@Qualifier("dataSourceDynaminc1") DataSource dynamicDataSource) {
+        // 配置事务管理, 使用事务时在方法头部添加@Transactional注解即可
+        return new DataSourceTransactionManager(dynamicDataSource);
     }
 }

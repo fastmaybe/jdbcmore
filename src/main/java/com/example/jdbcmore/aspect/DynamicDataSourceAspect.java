@@ -7,12 +7,14 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
  * @Author: liulang
  * @Date: 2020/7/23 20:43
  */
+@Order(-1)
 @Aspect
 @Component
 public class DynamicDataSourceAspect {
