@@ -38,16 +38,16 @@ public class DynamicService1 {
         userMapper.insertMaster(slave2);
 //        int a =10/0;
     }
-    @Transactional
-    @DataSource("slave")
+    @Transactional(rollbackFor = Exception.class)
     public void testHasTra3(){
 
-        User slave = User.builder().id(18).name("slave").build();
+        User slave = User.builder().id(20).name("slave").build();
         userMapper.insert(slave);
 
-        User slave2 = User.builder().id(18).name("master").build();
+        User slave2 = User.builder().id(20).name("master").build();
         userMapper.insertMaster(slave2);
 
+//        int ass =10/0;
     }
 
 

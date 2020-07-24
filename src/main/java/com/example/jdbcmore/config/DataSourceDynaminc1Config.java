@@ -1,6 +1,8 @@
 package com.example.jdbcmore.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.example.jdbcmore.config.transaction.MyTransactionsFactory;
+import com.mysql.cj.jdbc.MysqlXADataSource;
 import lombok.Data;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +13,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -52,16 +55,23 @@ public class DataSourceDynaminc1Config {
     @Bean
 //    @ConfigurationProperties("spring.datasource.default")
     public DataSource defaultDataSource(@Qualifier("defaultDataSourceConf")DefaultDataSourceConf conf){
-        DruidDataSource druidDataSource = new DruidDataSource();
-        druidDataSource.setUrl(conf.url);
-        druidDataSource.setUsername(conf.username);
-        druidDataSource.setPassword(conf.password);
-        druidDataSource.setDriverClassName(conf.driverClassName);
-        logger.info("   ========== default datasource ==========");
-        logger.info("[ default datasource url ] {}",druidDataSource.getUrl());
-        logger.info("[ default datasource dbType ] {}",druidDataSource.getClass());
+        MysqlXADataSource mysqlXADataSource = new MysqlXADataSource();
+        mysqlXADataSource.setUrl(conf.url);
+        mysqlXADataSource.setUser(conf.username);
+        mysqlXADataSource.setPassword(conf.password);
+        AtomikosDataSourceBean atomikosDataSource = new AtomikosDataSourceBean();
+//        atomikosDataSource.setUniqueResourceName(uniqueResourceName);
+        atomikosDataSource.setXaDataSource(mysqlXADataSource);
+//        atomikosDataSource.setMinPoolSize(minPoolSize);
+//        atomikosDataSource.setMaxPoolSize(maxPoolSize);
+//        atomikosDataSource.setTestQuery("SELECT 1");
 
-        return druidDataSource;
+
+        logger.info("   ========== default datasource ==========");
+        logger.info("[ default datasource url ] {}",conf.getUrl());
+        logger.info("[ default datasource dbType ] {}",atomikosDataSource.getClass());
+
+        return atomikosDataSource;
     }
 
     @ConfigurationProperties("spring.datasource.slave")
@@ -76,15 +86,24 @@ public class DataSourceDynaminc1Config {
 
     @Bean
     public DataSource slaveDataSource(@Qualifier("slaveDataSourceConf")SlaveDataSourceConf conf){
-        DataSourceBuilder<?> builder = DataSourceBuilder.create();
-        DataSource build = builder.driverClassName(conf.driverClassName)
-                .url(conf.jdbcUrl)
-                .password(conf.password)
-                .username(conf.username).build();
+
+
+        MysqlXADataSource mysqlXADataSource = new MysqlXADataSource();
+        mysqlXADataSource.setUrl(conf.jdbcUrl);
+        mysqlXADataSource.setUser(conf.username);
+        mysqlXADataSource.setPassword(conf.password);
+        AtomikosDataSourceBean atomikosDataSource = new AtomikosDataSourceBean();
+//        atomikosDataSource.setUniqueResourceName(uniqueResourceName);
+        atomikosDataSource.setXaDataSource(mysqlXADataSource);
+//        atomikosDataSource.setMinPoolSize(minPoolSize);
+//        atomikosDataSource.setMaxPoolSize(maxPoolSize);
+//        atomikosDataSource.setTestQuery("SELECT 1");
+
+
         logger.info("   ========== slave datasource ==========");
         logger.info("[ slave datasource url ] {}",conf.jdbcUrl);
-        logger.info("[ slave datasource dbType ] {}",build.getClass());
-        return build;
+        logger.info("[ slave datasource dbType ] {}",atomikosDataSource.getClass());
+        return atomikosDataSource;
     }
 
 
@@ -113,6 +132,8 @@ public class DataSourceDynaminc1Config {
         //设置别名
 //        bean.setTypeAliasesPackage("");
 
+
+        bean.setTransactionFactory(new MyTransactionsFactory());
 //        bean.se
         //设置mapper扫描地址
         bean.setMapperLocations(new PathMatchingResourcePatternResolver()
@@ -126,9 +147,5 @@ public class DataSourceDynaminc1Config {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 
-    @Bean
-    public PlatformTransactionManager transactionManager(@Qualifier("dataSourceDynaminc1") DataSource dynamicDataSource) {
-        // 配置事务管理, 使用事务时在方法头部添加@Transactional注解即可
-        return new DataSourceTransactionManager(dynamicDataSource);
-    }
+
 }

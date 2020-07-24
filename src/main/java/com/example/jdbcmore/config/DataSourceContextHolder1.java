@@ -20,4 +20,13 @@ public class DataSourceContextHolder1 {
         contextHolder.remove();
     }
 
+    public static String getDataSourceKey() {
+        String key = contextHolder.get();
+        if (null == key) {
+            key = "default";   //默认default
+        }
+        return key;
+    }
+
+
 }

@@ -27,6 +27,11 @@ public class DataSourceDynaminc1 extends AbstractRoutingDataSource {
         super.afterPropertiesSet();    // 必须添加该句，否则新添加数据源无法识别到
     }
 
+    public String getCurrentDatasourceKey()
+    {
+        return DataSourceContextHolder1.getDataSourceKey();
+    }
+
     public static synchronized DataSourceDynaminc1 getInstance(){
         if(instance==null){
             synchronized (LOCK){
